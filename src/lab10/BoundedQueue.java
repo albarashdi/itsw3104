@@ -21,7 +21,7 @@ public class BoundedQueue<T> {
         capacity = _capacity;
         head = new Node(null);
         tail = head;
-        size = new AtomicInteger(0);
+        size = new AtomicInteger();
         enqLock = new ReentrantLock();
         notFullCondition = enqLock.newCondition();
         deqLock = new ReentrantLock();
@@ -43,6 +43,7 @@ public class BoundedQueue<T> {
         } finally {
             enqLock.unlock();
         }
+        System.out.println(Thread.currentThread().getName()+": adds "+x);
         if (mustWakeDequeuers) {
             deqLock.lock();
             try {

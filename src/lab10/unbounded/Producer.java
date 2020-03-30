@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lab10;
+package lab10.unbounded;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,9 +13,9 @@ import java.util.logging.Logger;
  * @author Ahmed Al-Brashdi
  */
 public class Producer extends Thread {
-	private BoundedQueue<Integer> list=null;
+	private UnboundedQueue<Integer> list=null;
 	private Counter ctr=null;
-	public Producer(Counter _ctr, BoundedQueue<Integer> _list,String threadName) {
+	public Producer(Counter _ctr, UnboundedQueue<Integer> _list,String threadName) {
 		list=_list;
 		this.setName(threadName);
 		ctr=_ctr;
@@ -29,7 +29,7 @@ public class Producer extends Thread {
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
                     }
-			
+			System.out.println(this.getName()+": adds "+num);
 		}
 	}
 }

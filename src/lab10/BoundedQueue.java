@@ -16,6 +16,8 @@ public class BoundedQueue<T> {
     Node head;
     Node tail;
     int capacity;
+    Node[] items;
+    int counter = 0;
 
     public BoundedQueue(int _capacity) {
         capacity = _capacity;
@@ -26,24 +28,28 @@ public class BoundedQueue<T> {
         notFullCondition = enqLock.newCondition();
         deqLock = new ReentrantLock();
         notEmptyCondition = deqLock.newCondition();
+        items = new Node[_capacity];
     }
 
     public void enq(T x) throws InterruptedException {
         boolean mustWakeDequeuers = false;
         enqLock.lock();
         try {
-            while (size.get() == capacity) {
+            while (counter == capacity) {
                 notFullCondition.await();
             }
             Node e = new Node(x);
+            items[counter]=e;
             tail.next = tail = e;
+            counter++;
             if (size.getAndIncrement() == 0) {
                 mustWakeDequeuers = true;
             }
         } finally {
             enqLock.unlock();
         }
-        System.out.println(Thread.currentThread().getName()+": adds "+x);
+        System.out.println(Thread.currentThread().getName()+": adds "+x+" size "+counter);
+        Thread.sleep(200);
         if (mustWakeDequeuers) {
             deqLock.lock();
             try {
@@ -59,17 +65,21 @@ public class BoundedQueue<T> {
         boolean mustWakeEnqueuers = true;
         deqLock.lock();
         try {
-            while (size.get() == 0) {
+            while (counter == 0) {
                 notEmptyCondition.await();
             }
             result = (T) head.next.item;
             head = head.next;
+            counter--;
+            System.out.println(Thread.currentThread().getName()+": removed "+result+" size "+counter);
+            Thread.sleep(200);
             if (size.getAndIncrement() == capacity) {
                 mustWakeEnqueuers = true;
             }
         } finally {
             deqLock.unlock();
         }
+        
         if (mustWakeEnqueuers) {
             enqLock.lock();
             try {

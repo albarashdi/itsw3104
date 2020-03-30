@@ -22,7 +22,7 @@ public class Producer extends Thread {
 	}
 	@Override
 	public void run() {
-		for(int i=0;i<20;i++) {
+		for(int i=0;i<10;i++) {
 			int num=ctr.getAndIncrement();
                     try {
                         list.enq(num);

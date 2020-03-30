@@ -29,7 +29,6 @@ public class Consumer extends Thread {
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Consumer.class.getName()).log(Level.SEVERE, null, ex);
                     }
-			System.out.println(this.getName()+": removes "+num);
 		}
 	}
 }

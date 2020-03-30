@@ -15,18 +15,14 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class UnboundedQueue<T> {
     ReentrantLock enqLock, deqLock;
-    Condition notEmptyCondition;
-    AtomicInteger size;
     Node head;
     Node tail;
 
     public UnboundedQueue() {
         head = new Node(null);
         tail = head;
-        size = new AtomicInteger(0);
         enqLock = new ReentrantLock();
         deqLock = new ReentrantLock();
-        notEmptyCondition = deqLock.newCondition();
     }
 
     public void enq(T x) throws InterruptedException {

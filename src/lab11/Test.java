@@ -22,7 +22,7 @@ class A extends Thread {
     }
 
     public void run() {
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < 6; i++) {
             try {
                 stack.push(new Random().nextInt(99));
             } catch (InterruptedException ex) {
@@ -41,7 +41,7 @@ class B extends Thread {
     }
 
     public void run() {
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < 6; i++) {
             try {
                 stack.push(new Random().nextInt(99));
             } catch (InterruptedException ex) {
@@ -51,11 +51,30 @@ class B extends Thread {
     }
 }
 
+class C extends Thread{
+    private LockFreeStack stack;
+
+    C(LockFreeStack stack) {
+        this.stack = stack;
+    }
+
+    public void run() {
+        
+        try {
+            stack.pop();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(C.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        
+    }
+}
+
 public class Test {
 
     public static void main(String arg[]) throws InterruptedException {
         LockFreeStack stack = new LockFreeStack();
-
+        
         A t1 = new A(stack);
         t1.start();
         B t2 = new B(stack);

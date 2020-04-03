@@ -16,8 +16,8 @@ public class LockFreeStack<T> {
     AtomicReference<Node> top = new AtomicReference<Node>(null);
     
     // setting the time to backoff if compareAndSet returns false for tryPush
-    static final int MIN_DELAY = 100;
-    static final int MAX_DELAY = 300;
+    static final int MIN_DELAY = 500;
+    static final int MAX_DELAY = 1000;
     Backoff backoff = new Backoff(MIN_DELAY, MAX_DELAY);
     
     // Thois is called from push method. 
@@ -37,6 +37,7 @@ public class LockFreeStack<T> {
         
         while (true) {
             if (tryPush(node)) {
+                System.out.println("success pushing!");
                 return; // if the tryPush returns true, then break the loop and return
             } else {
                 System.out.println("retrying push...");
@@ -75,7 +76,8 @@ public class LockFreeStack<T> {
                 
             // else backoff and try again
             } else {
-                System.out.println("retrying pop...");
+                System.out.println("nothing to pop...");
+                
                 backoff.backoff();
             }
         }
